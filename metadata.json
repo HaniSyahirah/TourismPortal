@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Explore Malaysia - Tourism Portal \u0026 GCP Cloud Project",
+  "description": "Cloud Computing (ARC4213) Tourism Portal featuring destination portfolio, package showcase, interactive weather widget, and PHP GCP App Engine booking system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
