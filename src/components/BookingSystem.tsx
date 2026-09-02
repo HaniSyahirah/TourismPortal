@@ -75,7 +75,7 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // Hantar data ke backend MySQL
+  // Hantar data ke backend MySQL using relative path
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
@@ -83,7 +83,7 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const response = await fetch('http://localhost:5000/api/bookings', {
+        const response = await fetch('/api/bookings', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
