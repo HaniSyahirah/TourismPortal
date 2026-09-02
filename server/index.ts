@@ -1,16 +1,25 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { db } from './db.js';
 
+// Resolve directory paths for ES Modules / tsx
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// 1. Default Route
-app.get('/', (req, res) => {
+// Serve static frontend files from Vite build output directory (dist)
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// 1. Health Check & Test Routes
+app.get('/api/health', (req, res) => {
   res.send('API Server is running!');
 });
 
@@ -132,7 +141,12 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
+// 6. Wildcard route to serve React/Vite index.html for page reloads
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
 // Start Server
 app.listen(PORT, () => {
-  console.log(` Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
