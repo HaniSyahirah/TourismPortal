@@ -67,15 +67,24 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
       newErrors.paxCount = 'Number of travelers must be between 1 and 50.';
     }
 
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    // Wajib diisi (Primary) Validation for Email
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Please provide a valid email address.';
+    }
+
+    // Wajib diisi (Primary) Validation for Phone
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Contact phone number is required.';
+    } else if (formData.phone.trim().length < 8) {
+      newErrors.phone = 'Please enter a valid phone number.';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Hantar data ke backend MySQL using relative path
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
@@ -204,18 +213,14 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
                 <span className="text-stone-500 block font-medium">Package Tier:</span>
                 <span className="font-bold text-stone-900 text-sm">{confirmation.packageType} Experience</span>
               </div>
-              {confirmation.email && (
-                <div>
-                  <span className="text-stone-500 block font-medium">Contact Email:</span>
-                  <span className="font-bold text-stone-900 text-sm">{confirmation.email}</span>
-                </div>
-              )}
-              {confirmation.phone && (
-                <div>
-                  <span className="text-stone-500 block font-medium">Contact Phone:</span>
-                  <span className="font-bold text-stone-900 text-sm">{confirmation.phone}</span>
-                </div>
-              )}
+              <div>
+                <span className="text-stone-500 block font-medium">Contact Email:</span>
+                <span className="font-bold text-stone-900 text-sm">{confirmation.email}</span>
+              </div>
+              <div>
+                <span className="text-stone-500 block font-medium">Contact Phone:</span>
+                <span className="font-bold text-stone-900 text-sm">{confirmation.phone}</span>
+              </div>
             </div>
 
             {confirmation.specialRequests && (
@@ -277,7 +282,7 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
             </div>
 
             {/* Destination */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 sm:col-span-2">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
                 Malaysian Destination <span className="text-rose-500">*</span>
               </label>
@@ -337,73 +342,10 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
               {errors.paxCount && <p className="text-xs text-rose-600 font-medium">{errors.paxCount}</p>}
             </div>
 
-{/* Package Tier */}
-<div className="space-y-3">
-  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
-    Package Tier <span className="text-rose-500">*</span>
-  </label>
-  
-  {/* Buttons */}
-  <div className="grid grid-cols-3 gap-2">
-    {(['Basic', 'Standard', 'Premium'] as PackageTier[]).map((tier) => (
-      <button
-        key={tier}
-        type="button"
-        onClick={() => setFormData({ ...formData, packageType: tier })}
-        className={`py-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-          formData.packageType === tier
-            ? 'bg-emerald-800 border-emerald-800 text-white shadow-xs'
-            : 'bg-[#FAF8F5] border-[#E7E2D8] text-stone-700 hover:bg-[#F2EDE4]'
-        }`}
-      >
-        {tier}
-      </button>
-    ))}
-  </div>
-
-  {/* Package Descriptions */}
-  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E7E2D8] text-xs text-stone-600 transition-all">
-    {formData.packageType === 'Basic' && (
-      <div className="space-y-1">
-        <p className="font-bold text-stone-900">Basic Experience</p>
-        <p className="leading-relaxed">
-          <strong>Includes:</strong> Essential guided tour & main entry tickets.
-        </p>
-        <p className="text-stone-500">
-          <strong>Why choose this:</strong> Perfect for budget-conscious travelers who prefer managing their own meals and transport.
-        </p>
-      </div>
-    )}
-
-    {formData.packageType === 'Standard' && (
-      <div className="space-y-1">
-        <p className="font-bold text-stone-900">Standard Experience (Most Popular)</p>
-        <p className="leading-relaxed">
-          <strong>Includes:</strong> Guided tour, entry tickets, local meal, and shared hotel pickup/drop-off.
-        </p>
-        <p className="text-stone-500">
-          <strong>Why choose this:</strong> Ideal for travelers seeking a hassle-free, balanced itinerary with convenient transport included.
-        </p>
-      </div>
-    )}
-
-    {formData.packageType === 'Premium' && (
-      <div className="space-y-1">
-        <p className="font-bold text-stone-900">Premium VIP Experience</p>
-        <p className="leading-relaxed">
-          <strong>Includes:</strong> Private vehicle, dedicated personal guide, priority entry, lunch & dinner included.
-        </p>
-        <p className="text-stone-500">
-          <strong>Why choose this:</strong> Best for families or luxury travelers who want full privacy, maximum comfort, and customized service.
-        </p>
-      </div>
-    )}
-  </div>
-</div>
-            {/* Email Address */}
+            {/* Email Address (Primary & Required) */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
-                Email Address <span className="text-stone-400 text-[10px] font-normal">(Optional)</span>
+                Email Address <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
@@ -412,16 +354,18 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#DCD6C9] bg-[#FAF8F5] text-sm outline-none focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 transition-all text-stone-900 placeholder-stone-400"
+                  className={`w-full pl-11 pr-4 py-3 rounded-xl border text-sm outline-none transition-all ${
+                    errors.email ? 'border-rose-500 bg-rose-50/50' : 'border-[#DCD6C9] bg-[#FAF8F5] focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700'
+                  }`}
                 />
               </div>
               {errors.email && <p className="text-xs text-rose-600 font-medium">{errors.email}</p>}
             </div>
 
-            {/* Phone Number */}
+            {/* Phone Number (Primary & Required) */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
-                Contact Phone <span className="text-stone-400 text-[10px] font-normal">(Optional)</span>
+                Contact Phone <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <Phone className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
@@ -430,8 +374,71 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
                   placeholder="+60 12-345 6789"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#DCD6C9] bg-[#FAF8F5] text-sm outline-none focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 transition-all text-stone-900 placeholder-stone-400"
+                  className={`w-full pl-11 pr-4 py-3 rounded-xl border text-sm outline-none transition-all ${
+                    errors.phone ? 'border-rose-500 bg-rose-50/50' : 'border-[#DCD6C9] bg-[#FAF8F5] focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700'
+                  }`}
                 />
+              </div>
+              {errors.phone && <p className="text-xs text-rose-600 font-medium">{errors.phone}</p>}
+            </div>
+
+            {/* Package Tier (Repositioned Below) */}
+            <div className="space-y-3 sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
+                Package Tier <span className="text-rose-500">*</span>
+              </label>
+              
+              <div className="grid grid-cols-3 gap-2">
+                {(['Basic', 'Standard', 'Premium'] as PackageTier[]).map((tier) => (
+                  <button
+                    key={tier}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, packageType: tier })}
+                    className={`py-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                      formData.packageType === tier
+                        ? 'bg-emerald-800 border-emerald-800 text-white shadow-xs'
+                        : 'bg-[#FAF8F5] border-[#E7E2D8] text-stone-700 hover:bg-[#F2EDE4]'
+                    }`}
+                  >
+                    {tier}
+                  </button>
+                ))}
+              </div>
+
+              {/* Package Descriptions using Bullets */}
+              <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E7E2D8] text-xs text-stone-600 transition-all">
+                {formData.packageType === 'Basic' && (
+                  <div className="space-y-2">
+                    <p className="font-bold text-stone-900">Basic Package Includes:</p>
+                    <ul className="list-disc list-inside space-y-1 text-stone-700">
+                      <li>Essential tour guide service</li>
+                      <li>Main attraction entry tickets</li>
+                      <li>Ideal for budget-conscious & independent travelers</li>
+                    </ul>
+                  </div>
+                )}
+
+                {formData.packageType === 'Standard' && (
+                  <div className="space-y-2">
+                    <p className="font-bold text-stone-900">Standard Package (Recommended) Includes:</p>
+                    <ul className="list-disc list-inside space-y-1 text-stone-700">
+                      <li>Full guided experience & attraction tickets</li>
+                      <li>Complimentary authentic local lunch</li>
+                      <li>Shared hotel pickup and drop-off service</li>
+                    </ul>
+                  </div>
+                )}
+
+                {formData.packageType === 'Premium' && (
+                  <div className="space-y-2">
+                    <p className="font-bold text-stone-900">Premium VIP Package Includes:</p>
+                    <ul className="list-disc list-inside space-y-1 text-stone-700">
+                      <li>Private air-conditioned vehicle & dedicated tour guide</li>
+                      <li>Skip-the-line priority access to all attractions</li>
+                      <li>Full-course gourmet lunch and dinner included</li>
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -444,7 +451,7 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
                 <MessageSquare className="w-4 h-4 absolute left-4 top-3 text-stone-400" />
                 <textarea
                   rows={3}
-                  placeholder="e.g. Vegetarian meals requested, airport transfer needed..."
+                  placeholder="e.g. Vegetarian meals requested, wheelchair accessibility needed..."
                   value={formData.specialRequests}
                   onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
                   className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-[#DCD6C9] bg-[#FAF8F5] text-sm outline-none focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 transition-all text-stone-900 placeholder-stone-400"
