@@ -64,7 +64,8 @@ export const DESTINATIONS: Destination[] = [
     state: 'Melaka',
     tagline: 'Historic Straits City of Colonial Landmarks & River Cruises',
     description: 'A historic port city steeped in rich Malay, Portuguese, Dutch, and British history, featuring the 17th-century Red Stadthuys, A Famosa fortress, Baba Nyonya culture, and Jonker Walk night market.',
-    imageUrl: 'https://images.unsplash.com/photo-1598887142487-3c854d51d2c2?auto=format&fit=crop&w=1000&q=80',
+    // Pautan gambar Melaka yang diperbaiki:
+    imageUrl: 'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?auto=format&fit=crop&w=1000&q=80',
     highlights: [
       'The Dutch Red Stadthuys and Christ Church',
       'Melaka River Cruise with illuminated mural walls',
