@@ -337,29 +337,69 @@ export const BookingSystem: React.FC<BookingSystemProps> = ({
               {errors.paxCount && <p className="text-xs text-rose-600 font-medium">{errors.paxCount}</p>}
             </div>
 
-            {/* Package Tier */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
-                Package Tier <span className="text-rose-500">*</span>
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['Basic', 'Standard', 'Premium'] as PackageTier[]).map((tier) => (
-                  <button
-                    key={tier}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, packageType: tier })}
-                    className={`py-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                      formData.packageType === tier
-                        ? 'bg-emerald-800 border-emerald-800 text-white shadow-xs'
-                        : 'bg-[#FAF8F5] border-[#E7E2D8] text-stone-700 hover:bg-[#F2EDE4]'
-                    }`}
-                  >
-                    {tier}
-                  </button>
-                ))}
-              </div>
-            </div>
+{/* Package Tier */}
+<div className="space-y-3">
+  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
+    Package Tier <span className="text-rose-500">*</span>
+  </label>
+  
+  {/* Buttons */}
+  <div className="grid grid-cols-3 gap-2">
+    {(['Basic', 'Standard', 'Premium'] as PackageTier[]).map((tier) => (
+      <button
+        key={tier}
+        type="button"
+        onClick={() => setFormData({ ...formData, packageType: tier })}
+        className={`py-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+          formData.packageType === tier
+            ? 'bg-emerald-800 border-emerald-800 text-white shadow-xs'
+            : 'bg-[#FAF8F5] border-[#E7E2D8] text-stone-700 hover:bg-[#F2EDE4]'
+        }`}
+      >
+        {tier}
+      </button>
+    ))}
+  </div>
 
+  {/* Package Descriptions */}
+  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E7E2D8] text-xs text-stone-600 transition-all">
+    {formData.packageType === 'Basic' && (
+      <div className="space-y-1">
+        <p className="font-bold text-stone-900">Basic Experience</p>
+        <p className="leading-relaxed">
+          <strong>Includes:</strong> Essential guided tour & main entry tickets.
+        </p>
+        <p className="text-stone-500">
+          <strong>Why choose this:</strong> Perfect for budget-conscious travelers who prefer managing their own meals and transport.
+        </p>
+      </div>
+    )}
+
+    {formData.packageType === 'Standard' && (
+      <div className="space-y-1">
+        <p className="font-bold text-stone-900">Standard Experience (Most Popular)</p>
+        <p className="leading-relaxed">
+          <strong>Includes:</strong> Guided tour, entry tickets, local meal, and shared hotel pickup/drop-off.
+        </p>
+        <p className="text-stone-500">
+          <strong>Why choose this:</strong> Ideal for travelers seeking a hassle-free, balanced itinerary with convenient transport included.
+        </p>
+      </div>
+    )}
+
+    {formData.packageType === 'Premium' && (
+      <div className="space-y-1">
+        <p className="font-bold text-stone-900">Premium VIP Experience</p>
+        <p className="leading-relaxed">
+          <strong>Includes:</strong> Private vehicle, dedicated personal guide, priority entry, lunch & dinner included.
+        </p>
+        <p className="text-stone-500">
+          <strong>Why choose this:</strong> Best for families or luxury travelers who want full privacy, maximum comfort, and customized service.
+        </p>
+      </div>
+    )}
+  </div>
+</div>
             {/* Email Address */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
